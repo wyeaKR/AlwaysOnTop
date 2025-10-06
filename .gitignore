@@ -10,6 +10,7 @@ build/
 Pyarmor files
 obfuscated_code/
 .pyarmor_capsule.zip
+pyarmor.bug.log
 
 Python cache files
 pycache/
