@@ -12,9 +12,9 @@ import webbrowser
 import requests # 업데이트 확인을 위해 추가
 
 # --- 프로그램 정보 ---
-CURRENT_VERSION = "1.0"
+CURRENT_VERSION = "1.0.1" # 버전을 v1.0.1로 업데이트
 # 중요: GitHub ID를 wyeaKR로 수정했습니다.
-GITHUB_API_URL = "https://api.github.com/repos/wyeaKR/AlwaysOnTop/releases/latest" 
+GITHUB_API_URL = "https://api.github.com/repos/wyeaKR/AlwaysOnTop/releases/latest"
 
 # --- 상태 관리를 위한 전역 변수 ---
 running = False
@@ -26,12 +26,21 @@ def check_for_updates():
     try:
         response = requests.get(GITHUB_API_URL, timeout=5)
         response.raise_for_status() # HTTP 에러가 있을 경우 예외 발생
-        
+
         latest_version_tag = response.json()['tag_name']
         latest_version = latest_version_tag.lstrip('v') # 'v' 접두사 제거
 
-        # 버전 비교 (간단한 문자열 비교, 필요시 더 정교한 로직 사용 가능)
-        if latest_version > CURRENT_VERSION:
+        # --- 수정된 부분: 버전을 숫자로 변환하여 정확하게 비교 ---
+        current_parts = list(map(int, CURRENT_VERSION.split('.')))
+        latest_parts = list(map(int, latest_version.split('.')))
+
+        # 더 긴 버전 형식에 맞춰 길이를 통일 (예: 1.0 -> 1.0.0)
+        while len(current_parts) < len(latest_parts):
+            current_parts.append(0)
+        while len(latest_parts) < len(current_parts):
+            latest_parts.append(0)
+
+        if latest_parts > current_parts:
             return 'update_needed'
         else:
             return 'latest'
@@ -171,15 +180,15 @@ if is_admin():
 
     # 시작 팝업
     ctypes.windll.user32.MessageBoxW(
-        0, 
-        "Created by WYEA", 
-        "AlwaysOnTop", 
+        0,
+        "Created by WYEA",
+        "AlwaysOnTop",
         win32con.MB_OK | win32con.MB_ICONINFORMATION | win32con.MB_TOPMOST
     )
 
     root.deiconify() # 팝업 확인 후 메인 창 표시
-    root.title("AlwaysOnTop v1.0")
-    
+    root.title("AlwaysOnTop v1.0.1") # 창 제목도 업데이트
+
     root.attributes('-topmost', True)
     root.after(100, lambda: root.attributes('-topmost', False))
 
@@ -191,7 +200,7 @@ if is_admin():
     position_x = int(screen_width / 2 - window_width / 2)
     position_y = int(screen_height / 2 - window_height / 2)
     root.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
-    
+
     root.resizable(False, False)
 
     frame = tk.Frame(root)
@@ -234,7 +243,7 @@ if is_admin():
         except tk.TclError:
             return
         root.after(100, prevent_minimize)
-        
+
     def on_closing():
         """프로그램 종료 시 메인 창을 먼저 숨기고 사용자에게 홈페이지 방문 여부를 묻습니다."""
         root.withdraw()
