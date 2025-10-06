@@ -1,0 +1,22 @@
+Python virtual environment
+.venv/
+venv/
+
+PyInstaller files
+dist/
+build/
+*.spec
+
+Pyarmor files
+obfuscated_code/
+.pyarmor_capsule.zip
+
+Python cache files
+pycache/
+*.pyc
+
+Ignore all python scripts...
+*.py
+
+...except for the main application script.
+!AlwaysOnTop.py
