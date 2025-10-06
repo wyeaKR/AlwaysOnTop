@@ -20,7 +20,7 @@ import requests # 업데이트 확인을 위해 추가
 
 # --- 프로그램 정보 ---
 # 현재 프로그램의 버전. GitHub 릴리즈의 태그와 정확히 일치해야 합니다.
-CURRENT_VERSION = "1.0.2"
+CURRENT_VERSION = "1.0.3"
 # GitHub API 주소. 'wyeaKR/AlwaysOnTop' 부분을 본인의 깃허브 ID와 저장소 이름으로 변경해야 합니다.
 GITHUB_API_URL = "https://api.github.com/repos/wyeaKR/AlwaysOnTop/releases/latest"
 
@@ -127,6 +127,12 @@ def pin_window():
                 # 창이 여전히 존재하는지 확인
                 if not win32gui.IsWindow(hwnd):
                     break
+                
+                # --- 버그 수정 ---
+                # 고정된 창이 최소화되었는지 주기적으로 확인하고, 그렇다면 복원합니다.
+                if win32gui.IsIconic(hwnd):
+                    win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+                
                 # 창을 최상위로 설정
                 win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST,
                                       0, 0, 0, 0,
@@ -199,7 +205,7 @@ if __name__ == "__main__":
         )
 
         root.deiconify()  # 팝업 확인 후 메인 창 표시
-        root.title("AlwaysOnTop v1.0.2")
+        root.title("AlwaysOnTop v1.0.3")
 
         # 창이 맨 앞에 잠깐 나타났다가 다른 창을 클릭해도 뒤로 가도록 설정
         root.attributes('-topmost', True)
