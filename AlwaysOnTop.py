@@ -273,6 +273,7 @@ if __name__ == "__main__":
 
         root.mainloop()
     else:
-        # 관리자 권한이 아닐 경우, 관리자 권한으로 스크립트를 다시 실행
+        # 관리자 권한이 아닐 경우, 관리자 권한으로 스크립트를 다시 실행git add AlwaysOnTop.py
+
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
